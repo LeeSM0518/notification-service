@@ -37,6 +37,9 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:$testContainerVersion")
     testImplementation("org.testcontainers:r2dbc:$testContainerVersion")
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
+
+    // aop
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 }
 
 kotlin {
