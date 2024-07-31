@@ -3,6 +3,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
+    id("com.google.osdetector") version "1.7.0"
 }
 
 group = "io.tutorial"
@@ -22,15 +23,24 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // spring
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:3.0.4")
+    if (osdetector.arch.equals("aarch_64")) {
+        implementation("io.netty:netty-resolver-dns-native-macos:4.1.89.Final:osx-aarch_64")
+    }
 
     // r2dbc
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.postgresql:r2dbc-postgresql:1.0.1.RELEASE")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+
+    // test
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // test container
     val testContainerVersion = "1.19.4"
