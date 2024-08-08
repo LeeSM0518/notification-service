@@ -15,7 +15,8 @@ internal class CreateReviewEventTest {
             reviewerName = "reviewerName",
             postId = UUID.randomUUID(),
             postTitle = "postTitle",
-            writtenDate = Instant.now()
+            writtenDate = Instant.now(),
+            receiverId = UUID.randomUUID(),
         )
 
         // when

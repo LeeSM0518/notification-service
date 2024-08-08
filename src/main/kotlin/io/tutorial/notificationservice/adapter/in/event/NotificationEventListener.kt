@@ -1,13 +1,20 @@
 package io.tutorial.notificationservice.adapter.`in`.event
 
-//@Controller
-//class NotificationEventListener(
-//    private val createNotificationsUseCase: CreateNotificationsUseCase,
-//) {
-//
-//    @EventListener
-//    suspend fun consumeCreateDomainEvent(createDomainEvent: CreateDomainEvent) {
-//        val notificationDto: NotificationDto = createDomainEvent.toDto()
-//        createNotificationsUseCase.create(notificationDto)
-//    }
-//}
+import io.tutorial.notificationservice.adapter.`in`.dto.CreateNotificationRequest
+import io.tutorial.notificationservice.adapter.`in`.dto.CreateNotificationRequest.Companion.toCreateNotificationRequest
+import io.tutorial.notificationservice.application.port.`in`.CreateNotificationUseCase
+import io.tutorial.notificationservice.domain.event.CreateNotificationEvent
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Controller
+
+@Controller
+class NotificationEventListener(
+    private val createNotificationUseCase: CreateNotificationUseCase,
+) {
+
+    @EventListener
+    suspend fun consumeCreateDomainEvent(createNotificationEvent: CreateNotificationEvent) {
+        val request: CreateNotificationRequest = createNotificationEvent.toCreateNotificationRequest()
+        createNotificationUseCase.create(request)
+    }
+}
