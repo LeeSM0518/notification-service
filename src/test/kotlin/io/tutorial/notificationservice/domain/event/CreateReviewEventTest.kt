@@ -20,7 +20,7 @@ internal class CreateReviewEventTest {
         )
 
         // when
-        val content = event.createContent()
+        val content = event.content
         val note = event.createNote()
 
         println("content : $content")
