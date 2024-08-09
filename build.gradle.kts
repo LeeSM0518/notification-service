@@ -38,6 +38,12 @@ dependencies {
     implementation("org.postgresql:r2dbc-postgresql:1.0.1.RELEASE")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 
+    // aop
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    // json
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
     // test
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -49,11 +55,8 @@ dependencies {
     testImplementation("org.testcontainers:r2dbc:$testContainerVersion")
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
 
-    // aop
-    implementation("org.springframework.boot:spring-boot-starter-aop")
-
-    // json
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    // coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
 }
 
 kotlin {
