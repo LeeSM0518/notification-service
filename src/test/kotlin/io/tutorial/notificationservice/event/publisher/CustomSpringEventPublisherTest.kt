@@ -4,7 +4,7 @@ import io.tutorial.notificationservice.config.IntegrationTest
 import io.tutorial.notificationservice.event.CustomSpringEvent
 import kotlin.test.Test
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,7 @@ class CustomSpringEventPublisherTest @Autowired constructor(
     }
 
     @Test
-    fun `사용자 정의 이벤트를 발행할 수 있다`(): Unit = runBlocking {
+    fun `사용자 정의 이벤트를 발행할 수 있다`() = runTest {
         // given
         val expected = "message"
 
