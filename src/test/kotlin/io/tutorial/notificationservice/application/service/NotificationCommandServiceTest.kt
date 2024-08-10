@@ -6,10 +6,10 @@ import io.tutorial.notificationservice.config.IntegrationTest
 import io.tutorial.notificationservice.domain.NotificationType
 import java.util.*
 import kotlin.test.AfterTest
+import kotlin.test.Test
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @IntegrationTest
