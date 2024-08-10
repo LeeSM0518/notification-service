@@ -7,7 +7,7 @@ import java.time.Instant
 import java.util.*
 
 data class Notification(
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID? = null,
     val type: NotificationType,
     val content: NotificationContent,
     val note: NotificationNote,
@@ -18,7 +18,7 @@ data class Notification(
     companion object {
         fun CreateNotificationRequest.toDomain() =
             Notification(
-                type = notificationType,
+                type = type,
                 content = content,
                 note = note,
                 receiverId = receiverId,

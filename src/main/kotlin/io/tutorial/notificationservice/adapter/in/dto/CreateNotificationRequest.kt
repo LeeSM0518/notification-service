@@ -10,7 +10,7 @@ data class CreateNotificationRequest(
     val content: NotificationContent,
     val note: NotificationNote,
     val receiverId: UUID,
-    val notificationType: NotificationType,
+    val type: NotificationType,
 ) {
     companion object {
         fun CreateNotificationEvent.toCreateNotificationRequest() =
@@ -18,7 +18,7 @@ data class CreateNotificationRequest(
                 content = content,
                 note = createNote(),
                 receiverId = receiverId,
-                notificationType = notificationType
+                type = notificationType
             )
     }
 }
