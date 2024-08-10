@@ -9,7 +9,7 @@ import org.testcontainers.utility.DockerImageName
 class PostgresqlInitializer : ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private val postgresqlContainer = PostgreSQLContainer(
-        DockerImageName.parse("postgres")
+        DockerImageName.parse("postgres:alpine")
     ).withDatabaseName("tutorial").withInitScript("schema.sql")
 
     override fun initialize(applicationContext: ConfigurableApplicationContext) {
