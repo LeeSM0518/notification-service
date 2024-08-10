@@ -5,4 +5,7 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface NotificationRepository : CoroutineCrudRepository<NotificationEntity, UUID>
+interface NotificationRepository : CoroutineCrudRepository<NotificationEntity, UUID> {
+
+    suspend fun countByReceiverIdAndCheckedIsFalse(receiverId: UUID): Long
+}

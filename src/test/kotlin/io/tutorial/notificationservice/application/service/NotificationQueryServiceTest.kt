@@ -1,4 +1,4 @@
-package io.tutorial.notificationservice.adapter.`in`
+package io.tutorial.notificationservice.application.service
 
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationEntity
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationRepository
@@ -8,18 +8,14 @@ import java.time.Instant
 import java.util.*
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.http.codec.ServerSentEvent
-import org.springframework.test.web.reactive.server.WebTestClient
 
 @IntegrationTest
-internal class NotificationRouterTest @Autowired constructor(
-    private val webTestClient: WebTestClient,
+internal class NotificationQueryServiceTest @Autowired constructor(
+    private val notificationQueryService: NotificationQueryService,
     private val notificationRepository: NotificationRepository,
 ) {
     lateinit var expected: NotificationEntity
@@ -43,24 +39,14 @@ internal class NotificationRouterTest @Autowired constructor(
     }
 
     @Test
-    fun `실시간으로 읽지 않은 알림의 개수를 조회할 수 있다`() = runTest {
+    fun `회원 식별자로 읽지 않은 알림의 개수를 조회할 수 있다`() = runTest {
         // given
-        val memberId = expected.receiverId.toString()
+        val memberId = expected.receiverId
 
         // when
-        val eventStream = webTestClient
-            .get()
-            .uri("/notifications/count")
-            .accept(MediaType.TEXT_EVENT_STREAM)
-            .header(HttpHeaders.AUTHORIZATION, memberId)
-            .exchange()
-            .expectStatus().isOk
-            .returnResult(ServerSentEvent::class.java)
-            .responseBody
-            .blockFirst()!!
+        val count = notificationQueryService.getCountOfUncheckedBy(memberId)
 
         // then
-        val streamCountResponse = eventStream.data() as LinkedHashMap<*, *>
-        assertThat(streamCountResponse["countOfUncheckedNotification"]).isEqualTo(1)
+        assertThat(count).isEqualTo(1)
     }
 }

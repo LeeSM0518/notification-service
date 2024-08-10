@@ -1,0 +1,4 @@
+# 실시간 알림 개수 조회 API
+GET http://localhost:8080/notifications/count
+Accept: text/event-stream
+Authorization: 878d8f5f-7bc3-4b5f-8e2c-5e1149a7e70b
