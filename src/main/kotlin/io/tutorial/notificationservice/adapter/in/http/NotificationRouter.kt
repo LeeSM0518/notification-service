@@ -1,4 +1,4 @@
-package io.tutorial.notificationservice.adapter.`in`
+package io.tutorial.notificationservice.adapter.`in`.http
 
 import java.time.Duration
 import java.time.LocalDate

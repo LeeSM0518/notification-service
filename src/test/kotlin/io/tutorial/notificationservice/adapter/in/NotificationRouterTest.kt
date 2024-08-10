@@ -1,7 +1,7 @@
 package io.tutorial.notificationservice.adapter.`in`
 
 import io.tutorial.notificationservice.config.IntegrationTest
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ internal class NotificationRouterTest @Autowired constructor(
 ) {
 
     @Test
-    fun `알림을 받을 수 있다`(): Unit = runBlocking {
+    fun `알림을 받을 수 있다`() = runTest {
         val result = webTestClient
             .get()
             .uri("/notification")

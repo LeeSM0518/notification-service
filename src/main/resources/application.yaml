@@ -1,5 +1,5 @@
 spring:
   r2dbc:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL:r2dbc:postgresql://localhost:15432/notificationdb}
+    username: ${DATABASE_USERNAME:notification}
+    password: ${DATABASE_PASSWORD:notification}

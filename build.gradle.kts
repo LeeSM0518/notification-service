@@ -1,6 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
+    kotlin("plugin.serialization") version "1.8.0"
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
     id("com.google.osdetector") version "1.7.0"
@@ -37,6 +38,12 @@ dependencies {
     implementation("org.postgresql:r2dbc-postgresql:1.0.1.RELEASE")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 
+    // aop
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    // json
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
     // test
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -48,8 +55,8 @@ dependencies {
     testImplementation("org.testcontainers:r2dbc:$testContainerVersion")
     testImplementation("org.testcontainers:postgresql:$testContainerVersion")
 
-    // aop
-    implementation("org.springframework.boot:spring-boot-starter-aop")
+    // coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
 }
 
 kotlin {
