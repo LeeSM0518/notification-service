@@ -1,8 +1,8 @@
-package io.tutorial.notificationservice.adapter.out
+package io.tutorial.notificationservice.application.service
 
+import io.tutorial.notificationservice.adapter.`in`.dto.CreateNotificationRequest
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationRepository
 import io.tutorial.notificationservice.config.IntegrationTest
-import io.tutorial.notificationservice.domain.Notification
 import io.tutorial.notificationservice.domain.NotificationType
 import java.util.*
 import kotlin.test.AfterTest
@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @IntegrationTest
-internal class NotificationCommandAdapterTest @Autowired constructor(
-    private val notificationCommandAdapter: NotificationCommandAdapter,
+internal class NotificationCommandServiceTest @Autowired constructor(
+    private val notificationCommandService: NotificationCommandService,
     private val notificationRepository: NotificationRepository,
 ) {
     @AfterTest
@@ -23,17 +23,17 @@ internal class NotificationCommandAdapterTest @Autowired constructor(
     }
 
     @Test
-    fun `알림을 저장할 수 있다`() = runTest {
+    fun `알림을 생성할 수 있다`() = runTest {
         // given
-        val expected = Notification(
-            type = NotificationType.REVIEW,
+        val expected = CreateNotificationRequest(
             content = "content",
             note = "note",
-            receiverId = UUID.randomUUID()
+            receiverId = UUID.randomUUID(),
+            type = NotificationType.REVIEW
         )
 
         // when
-        notificationCommandAdapter.save(expected)
+        notificationCommandService.create(expected)
 
         // then
         val notifications = notificationRepository.findAll().toList()
