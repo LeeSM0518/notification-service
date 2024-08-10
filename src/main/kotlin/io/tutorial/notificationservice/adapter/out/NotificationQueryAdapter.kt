@@ -11,6 +11,6 @@ class NotificationQueryAdapter(
 ) : LoadNotificationPort {
 
     override suspend fun loadCountOfUncheckedBy(memberId: UUID): Long =
-        notificationRepository.countByReceiverIdAndCheckedIsTrue(memberId)
+        notificationRepository.countByReceiverIdAndCheckedIsFalse(memberId)
 
 }

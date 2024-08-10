@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface NotificationRepository : CoroutineCrudRepository<NotificationEntity, UUID> {
 
-    suspend fun countByReceiverIdAndCheckedIsTrue(receiverId: UUID): Long
+    suspend fun countByReceiverIdAndCheckedIsFalse(receiverId: UUID): Long
 }

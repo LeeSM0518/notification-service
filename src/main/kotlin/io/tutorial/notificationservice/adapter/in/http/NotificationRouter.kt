@@ -4,12 +4,11 @@ import io.tutorial.notificationservice.adapter.`in`.dto.StreamCountResponse
 import io.tutorial.notificationservice.application.port.`in`.GetMemberUseCase
 import io.tutorial.notificationservice.application.port.`in`.GetNotificationUseCase
 import java.time.Duration
-import java.util.UUID
+import java.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -22,7 +21,7 @@ class NotificationRouter(
     private val getNotificationUseCase: GetNotificationUseCase,
 ) {
 
-    @GetMapping(path = ["/notifications"], produces = [TEXT_EVENT_STREAM_VALUE])
+    @GetMapping("/notifications/count")
     suspend fun streamCountOfUncheckedNotifications(
         @RequestHeader(AUTHORIZATION)
         authorization: String,
@@ -49,6 +48,6 @@ class NotificationRouter(
 
     companion object {
         private val streamIntervalDuration = Duration.ofSeconds(1)
-        private val retryDuration = Duration.ofSeconds(5)
+        private val retryDuration = Duration.ofSeconds(10)
     }
 }
