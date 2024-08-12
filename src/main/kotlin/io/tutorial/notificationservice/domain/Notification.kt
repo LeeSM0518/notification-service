@@ -17,6 +17,8 @@ data class Notification(
     val checked: Boolean = false,
 ) {
 
+    fun check() = copy(checked = true)
+
     fun toResponse() =
         NotificationResponse(
             id = id!!,
