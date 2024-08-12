@@ -1,7 +1,9 @@
 package io.tutorial.notificationservice.adapter.`in`
 
+import io.tutorial.notificationservice.adapter.`in`.dto.NotificationResponse
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationEntity
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationRepository
+import io.tutorial.notificationservice.common.PageResponse
 import io.tutorial.notificationservice.config.IntegrationTest
 import io.tutorial.notificationservice.domain.NotificationType
 import java.time.Instant
@@ -12,10 +14,12 @@ import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.http.MediaType.TEXT_EVENT_STREAM
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 
 @IntegrationTest
 internal class NotificationRouterTest @Autowired constructor(
@@ -26,7 +30,7 @@ internal class NotificationRouterTest @Autowired constructor(
 
     @BeforeTest
     fun setup() = runTest {
-        expected = NotificationEntity(
+        val entity = NotificationEntity(
             type = NotificationType.REVIEW,
             content = "content",
             note = "note",
@@ -34,7 +38,7 @@ internal class NotificationRouterTest @Autowired constructor(
             notifiedDate = Instant.now(),
             checked = false
         )
-        notificationRepository.save(expected)
+        expected = notificationRepository.save(entity)
     }
 
     @AfterTest
@@ -51,8 +55,8 @@ internal class NotificationRouterTest @Autowired constructor(
         val eventStream = webTestClient
             .get()
             .uri("/notifications/count")
-            .accept(MediaType.TEXT_EVENT_STREAM)
-            .header(HttpHeaders.AUTHORIZATION, memberId)
+            .accept(TEXT_EVENT_STREAM)
+            .header(AUTHORIZATION, memberId)
             .exchange()
             .expectStatus().isOk
             .returnResult(ServerSentEvent::class.java)
@@ -62,5 +66,34 @@ internal class NotificationRouterTest @Autowired constructor(
         // then
         val streamCountResponse = eventStream.data() as LinkedHashMap<*, *>
         assertThat(streamCountResponse["countOfUncheckedNotification"]).isEqualTo(1)
+    }
+
+    @Test
+    fun `알림 목록을 조회할 수 있다`() = runTest {
+        // given
+        val memberId = expected.receiverId.toString()
+
+        // when
+        val notificationsResponse = webTestClient
+            .get()
+            .uri("/notifications?page=0&size=10")
+            .accept(APPLICATION_JSON)
+            .header(AUTHORIZATION, memberId)
+            .exchange()
+            .expectBody<PageResponse<NotificationResponse>>()
+            .returnResult()
+            .responseBody!!
+            .data
+
+
+        // then
+        val actual = notificationsResponse[0]
+        assertThat(actual.id).isEqualTo(expected.id)
+        assertThat(actual.content).isEqualTo(expected.content)
+        assertThat(actual.note).isEqualTo(expected.note)
+        assertThat(actual.type).isEqualTo(expected.type)
+        assertThat(actual.receiverId).isEqualTo(expected.receiverId)
+        assertThat(actual.checked).isEqualTo(expected.checked)
+        assertThat(actual.notifiedDate).isEqualTo(expected.notifiedDate)
     }
 }

@@ -27,6 +27,17 @@ data class NotificationEntity(
     override fun getId(): UUID? = id
     override fun isNew(): Boolean = id == null
 
+    fun toDomain() =
+        Notification(
+            id = id!!,
+            type = type,
+            content = content,
+            note = note,
+            receiverId = receiverId,
+            notifiedDate = notifiedDate,
+            checked = checked,
+        )
+
     companion object {
         fun Notification.toEntity() =
             NotificationEntity(
