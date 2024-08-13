@@ -26,7 +26,7 @@ class NotificationCommandAdapter(
     override suspend fun check(request: CheckNotificationsRequest): Int =
         getNotifications(request)
             .map { it.toDomain() }
-            .map { it.check() }
+            .map { it.check(request.memberId) }
             .map { it.toEntity() }
             .let { notificationRepository.saveAll(it).count() }
 
