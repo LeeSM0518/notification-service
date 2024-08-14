@@ -1,5 +1,6 @@
 package io.tutorial.notificationservice.adapter.`in`
 
+import io.tutorial.notificationservice.adapter.`in`.dto.CheckNotificationResponse
 import io.tutorial.notificationservice.adapter.`in`.dto.NotificationResponse
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationEntity
 import io.tutorial.notificationservice.adapter.out.persistence.NotificationRepository
@@ -95,5 +96,49 @@ internal class NotificationRouterTest @Autowired constructor(
         assertThat(actual.receiverId).isEqualTo(expected.receiverId)
         assertThat(actual.checked).isEqualTo(expected.checked)
         assertThat(actual.notifiedDate).isEqualTo(expected.notifiedDate)
+    }
+
+    @Test
+    fun `읽지 않은 모든 알림의 읽음 상태를 변경 요청할 수 있다`() = runTest {
+        // given
+        val memberId = expected.receiverId.toString()
+
+        // when
+        val count = webTestClient
+            .patch()
+            .uri("/notifications/checked")
+            .accept(APPLICATION_JSON)
+            .header(AUTHORIZATION, memberId)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<CheckNotificationResponse>()
+            .returnResult()
+            .responseBody!!
+            .count
+
+        // then
+        assertThat(count).isOne()
+    }
+
+    @Test
+    fun `읽지 않은 특정 알림의 읽음 상태를 변경 요청할 수 있다`() = runTest {
+        // given
+        val memberId = expected.receiverId.toString()
+
+        // when
+        val count = webTestClient
+            .patch()
+            .uri("/notifications/${expected.id}/checked")
+            .accept(APPLICATION_JSON)
+            .header(AUTHORIZATION, memberId)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<CheckNotificationResponse>()
+            .returnResult()
+            .responseBody!!
+            .count
+
+        // then
+        assertThat(count).isOne()
     }
 }
