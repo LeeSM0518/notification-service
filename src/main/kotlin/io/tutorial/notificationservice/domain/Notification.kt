@@ -17,6 +17,13 @@ data class Notification(
     val checked: Boolean = false,
 ) {
 
+    fun check(requesterId: UUID): Notification {
+        if (receiverId != requesterId) {
+            throw IllegalAccessException("incorrect permissions.")
+        }
+        return copy(checked = true)
+    }
+
     fun toResponse() =
         NotificationResponse(
             id = id!!,

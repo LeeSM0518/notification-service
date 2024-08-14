@@ -21,4 +21,6 @@ interface NotificationRepository : CoroutineCrudRepository<NotificationEntity, U
     suspend fun countByReceiverId(
         receiverId: UUID,
     ): Long
+
+    suspend fun findAllByReceiverIdAndCheckedIsFalse(receiverId: UUID): Flow<NotificationEntity>
 }

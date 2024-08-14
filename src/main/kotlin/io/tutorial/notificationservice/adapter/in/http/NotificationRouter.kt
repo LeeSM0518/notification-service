@@ -1,10 +1,13 @@
 package io.tutorial.notificationservice.adapter.`in`.http
 
+import io.tutorial.notificationservice.adapter.`in`.dto.CheckNotificationResponse
+import io.tutorial.notificationservice.adapter.`in`.dto.CheckNotificationsRequest
 import io.tutorial.notificationservice.adapter.`in`.dto.GetNotificationsRequest
 import io.tutorial.notificationservice.adapter.`in`.dto.NotificationResponse
 import io.tutorial.notificationservice.adapter.`in`.dto.StreamCountResponse
 import io.tutorial.notificationservice.application.port.`in`.GetMemberUseCase
 import io.tutorial.notificationservice.application.port.`in`.GetNotificationUseCase
+import io.tutorial.notificationservice.application.port.`in`.ModifyNotificationUseCase
 import io.tutorial.notificationservice.common.PageResponse
 import io.tutorial.notificationservice.common.PageResponse.Companion.toResponse
 import java.time.Duration
@@ -16,6 +19,8 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -25,6 +30,7 @@ import reactor.core.publisher.Flux.interval
 class NotificationRouter(
     private val getMemberUseCase: GetMemberUseCase,
     private val getNotificationUseCase: GetNotificationUseCase,
+    private val modifyNotificationUseCase: ModifyNotificationUseCase,
 ) {
 
     @GetMapping("/notifications/count")
@@ -53,6 +59,19 @@ class NotificationRouter(
         val request = GetNotificationsRequest(memberId, page, size)
         val notifications: Page<NotificationResponse> = getNotificationUseCase.getNotifications(request)
         return notifications.toResponse()
+    }
+
+    @PatchMapping(path = ["/notifications/{notificationId}/checked", "/notifications/checked"])
+    suspend fun checkNotifications(
+        @RequestHeader(AUTHORIZATION)
+        authorization: String,
+        @PathVariable("notificationId", required = false)
+        notificationId: UUID?,
+    ): CheckNotificationResponse {
+        val memberId: UUID = getMemberUseCase.getMemberIdBy(authorization)
+        val request = CheckNotificationsRequest(memberId, notificationId)
+        val count: Int = modifyNotificationUseCase.check(request)
+        return CheckNotificationResponse(count)
     }
 
     private suspend fun getCountOfUncheckedNotifications(memberId: UUID): ServerSentEvent<StreamCountResponse> {
