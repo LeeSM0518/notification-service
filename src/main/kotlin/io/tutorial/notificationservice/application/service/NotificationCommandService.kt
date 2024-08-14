@@ -12,8 +12,8 @@ class NotificationCommandService(
     private val saveNotificationPort: SaveNotificationPort,
 ) : CreateNotificationUseCase {
 
-    override suspend fun create(request: CreateNotificationRequest) {
+    override suspend fun create(request: CreateNotificationRequest): Notification {
         val notification: Notification = request.toDomain()
-        saveNotificationPort.save(notification)
+        return saveNotificationPort.save(notification)
     }
 }

@@ -18,9 +18,10 @@ class NotificationCommandAdapter(
     private val notificationRepository: NotificationRepository,
 ) : SaveNotificationPort, ModifyNotificationUseCase {
 
-    override suspend fun save(notification: Notification) {
+    override suspend fun save(notification: Notification): Notification {
         val entity: NotificationEntity = notification.toEntity()
-        notificationRepository.save(entity)
+        val notificationEntity = notificationRepository.save(entity)
+        return notificationEntity.toDomain()
     }
 
     override suspend fun check(request: CheckNotificationsRequest): Int =

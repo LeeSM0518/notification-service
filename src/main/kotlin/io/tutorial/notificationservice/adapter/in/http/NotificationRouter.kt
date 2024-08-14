@@ -61,7 +61,7 @@ class NotificationRouter(
         return notifications.toResponse()
     }
 
-    @PatchMapping("/notifications/{notificationId}/checked")
+    @PatchMapping(path = ["/notifications/{notificationId}/checked", "/notifications/checked"])
     suspend fun checkNotifications(
         @RequestHeader(AUTHORIZATION)
         authorization: String,
